@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import gpxpy
 import re
+from math import radians, cos, sin, asin, sqrt
 
 class Controller:
     
@@ -35,6 +36,23 @@ class InputOutput:
 class GPXHandling:
     def __init__(self, path):
         self.path = path
+        
+    def pace_to_distance(self, pace):
+        return pace/4
+
+    def haversine(lon1, lat1, lon2, lat2):
+        # convert decimal degrees to radians 
+        lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    
+        # haversine formula 
+        dlon = lon2 - lon1 
+        dlat = lat2 - lat1 
+        a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+        c = 2 * asin(sqrt(a)) 
+        r = 6371
+        return c * r
+
+        
             
 
 def main():
