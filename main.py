@@ -9,6 +9,7 @@ class Controller:
     
     def app(self):
         gpx_path = self.io.get_gpx()
+        pace = self.io.get_pace()
     
 class InputOutput:
     def get_gpx(self):
@@ -22,6 +23,14 @@ class InputOutput:
                     print('Invalid path provided')
             else:
                 print('No GPX file provided ')
+            
+    def get_pace(self):
+         while True:
+             pace = input('At what pace do you think you will be moving in km/h? Enter an integer only ')
+             if pace.isdigit():
+                 return int(pace)
+             print('Please enter a valid integer')
+             
             
 class GPXHandling:
     def __init__(self, path):
