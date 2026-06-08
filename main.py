@@ -35,7 +35,11 @@ class InputOutput:
             
 class GPXHandling:
     def __init__(self, path):
-        self.path = path
+        self.gpx = self.parse_gpx(path)
+        
+    def parse_gpx(path):
+        gpx_file = open(r'C:\Users\tthol\Downloads\mapstogpx20260608_062451.gpx', 'r')
+        return gpxpy.parse(gpx_file)
         
     def pace_to_distance(self, pace):
         return pace/4
