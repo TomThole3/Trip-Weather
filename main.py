@@ -14,6 +14,7 @@ class Controller:
         pace = self.io.get_pace()/4
         gpx = self.gpx_handler.parse_gpx(gpx_path)
         coords = self.gpx_handler.extract_coords(gpx)
+        print(coords)
         
         
     
@@ -21,7 +22,7 @@ class InputOutput:
     def get_gpx(self):
         while True:
             path = input('Please enter a valid path to a gpx file ')
-            if bool(re.search(r'\.gpx$', path, re.IGNORECASE)):
+            if bool(re.search(r'^(?:".*\.gpx"|.*\.gpx)$', path.strip(), re.IGNORECASE)):
                 try:
                     open(path)    
                     return path
@@ -40,7 +41,7 @@ class InputOutput:
             
 class GPXHandling:
     
-    def parse_gpx(path):
+    def parse_gpx(self, path):
         gpx_file = open(r'C:\Users\tthol\Downloads\mapstogpx20260608_062451.gpx', 'r')
         return gpxpy.parse(gpx_file)
 
@@ -72,4 +73,3 @@ def main():
     
 if __name__ == "__main__":
     main()  
-
