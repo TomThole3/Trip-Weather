@@ -13,9 +13,9 @@ class Controller:
         gpx_path = self.io.get_gpx()
         #pace = self.io.get_pace()/4
         gpx = self.gpx_handler.parse_gpx(gpx_path)
-        print(gpx)
         coords = self.gpx_handler.extract_coords(gpx)
-        print(coords)
+        dist_coords = self.gpx_handler.add_distances(coords)
+        print(dist_coords)
 
     
 class InputOutput:
@@ -46,7 +46,7 @@ class GPXHandling:
         gpx_file = open(path, 'r')
         return gpxpy.parse(gpx_file)
 
-    def haversine(lon1, lat1, lon2, lat2):
+    def haversine(self, lon1, lat1, lon2, lat2):
         # convert decimal degrees to radians 
         lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
     
@@ -65,7 +65,16 @@ class GPXHandling:
                 for point in segment.points:
                     points.append((point.latitude, point.longitude))
         return points
-            
+    
+    def add_distances(self, points):
+        points_dist = []
+        points_dist.append((points[0], 0))
+        for i in range(len(points)-1):
+            lat, lon = points[i+1]
+            old_lat, old_lon = points[i]
+            distance = self.haversine(lat, lon, old_lat, old_lon)
+            points_dist.append((lat, lon, distance))
+        return points_dist
 
 def main():
    io = InputOutput()
