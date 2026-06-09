@@ -11,12 +11,12 @@ class Controller:
     
     def app(self):
         gpx_path = self.io.get_gpx()
-        pace = self.io.get_pace()/4
+        #pace = self.io.get_pace()/4
         gpx = self.gpx_handler.parse_gpx(gpx_path)
+        print(gpx)
         coords = self.gpx_handler.extract_coords(gpx)
         print(coords)
-        
-        
+
     
 class InputOutput:
     def get_gpx(self):
@@ -60,9 +60,10 @@ class GPXHandling:
     
     def extract_coords(self, gpx):
         points = []
-        for route in gpx.routes:
-            for point in route.points:
-                points.append((point.latitude, point.longtitude))
+        for track in gpx.tracks:
+            for segment in track.segments:
+                for point in segment.points:
+                    points.append((point.latitude, point.longitude))
         return points
             
 
