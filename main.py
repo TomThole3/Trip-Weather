@@ -22,9 +22,10 @@ class InputOutput:
     def get_gpx(self):
         while True:
             path = input('Please enter a valid path to a gpx file ')
-            if bool(re.search(r'^(?:".*\.gpx"|.*\.gpx)$', path.strip(), re.IGNORECASE)):
+            if bool(re.search(r'^"?.*\.gpx"?$', path.strip(), re.IGNORECASE)):
                 try:
-                    open(path)    
+                    path = path.strip('"')
+                    open(path, 'r')    
                     return path
                 except:
                     print('Invalid path provided')
@@ -42,7 +43,7 @@ class InputOutput:
 class GPXHandling:
     
     def parse_gpx(self, path):
-        gpx_file = open(r'C:\Users\tthol\Downloads\mapstogpx20260608_062451.gpx', 'r')
+        gpx_file = open(path, 'r')
         return gpxpy.parse(gpx_file)
 
     def haversine(lon1, lat1, lon2, lat2):
