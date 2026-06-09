@@ -11,14 +11,15 @@ class Controller:
     
     def app(self):
         gpx_path = self.io.get_gpx()
-        #pace = self.io.get_pace()/4
+        pace = self.io.get_pace()/4 # 15 minute interval for km/h
         gpx = self.gpx_handler.parse_gpx(gpx_path)
         coords = self.gpx_handler.extract_coords(gpx)
         dist_coords = self.gpx_handler.add_distances(coords)
-        print(dist_coords)
+        stripped = self.gpx_handler.strip_list(dist_coords, pace)
 
     
 class InputOutput:
+    
     def get_gpx(self):
         while True:
             path = input('Please enter a valid path to a gpx file ')
@@ -68,14 +69,25 @@ class GPXHandling:
     
     def add_distances(self, points):
         points_dist = []
-        points_dist.append((points[0], 0))
+        points_dist.append((points[0][0], points[0][1], 0))
         for i in range(len(points)-1):
             lat, lon = points[i+1]
             old_lat, old_lon = points[i]
             distance = self.haversine(lat, lon, old_lat, old_lon)
             points_dist.append((lat, lon, distance))
         return points_dist
-
+    
+    def strip_list(self, points, pace):
+        stripped = []
+        stripped.append((points[0][0], points[0][1]))
+        count = 0
+        for (lat, lon, dist) in points:
+            count += dist
+            if count > pace:
+                stripped.append((lat, lon))
+                count -= pace
+        return stripped
+    
 def main():
    io = InputOutput()
    gpx_handler = GPXHandling()
