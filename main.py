@@ -5,12 +5,17 @@ from math import radians, cos, sin, asin, sqrt
 
 class Controller:
     
-    def __init__(self, io):
+    def __init__(self, io, gpx_handler):
         self.io = io
+        self.gpx_handler = gpx_handler
     
     def app(self):
         gpx_path = self.io.get_gpx()
-        pace = self.io.get_pace()
+        pace = self.io.get_pace()/4
+        gpx = self.gpx_handler.parse_gpx(gpx_path)
+        coords = self.gpx_handler.extract_coords(gpx)
+        
+        
     
 class InputOutput:
     def get_gpx(self):
@@ -34,15 +39,10 @@ class InputOutput:
              
             
 class GPXHandling:
-    def __init__(self, path):
-        self.gpx = self.parse_gpx(path)
-        
+    
     def parse_gpx(path):
         gpx_file = open(r'C:\Users\tthol\Downloads\mapstogpx20260608_062451.gpx', 'r')
         return gpxpy.parse(gpx_file)
-        
-    def pace_to_distance(self, pace):
-        return pace/4
 
     def haversine(lon1, lat1, lon2, lat2):
         # convert decimal degrees to radians 
@@ -55,13 +55,19 @@ class GPXHandling:
         c = 2 * asin(sqrt(a)) 
         r = 6371
         return c * r
-
-        
+    
+    def extract_coords(self, gpx):
+        points = []
+        for route in gpx.routes:
+            for point in route.points:
+                points.append((point.latitude, point.longtitude))
+        return points
             
 
 def main():
    io = InputOutput()
-   con = Controller(io)
+   gpx_handler = GPXHandling()
+   con = Controller(io, gpx_handler)
    con.app()
     
 if __name__ == "__main__":
