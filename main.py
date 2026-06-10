@@ -3,12 +3,15 @@ import gpxpy
 import re
 from math import radians, cos, sin, asin, sqrt
 import datetime
+import openmeteo_requests
+import pandas as pd
 
 class Controller:
     
-    def __init__(self, io, gpx_handler):
+    def __init__(self, io, gpx_handler, weather_api):
         self.io = io
         self.gpx_handler = gpx_handler
+        self.weather_api = weather_api
     
     def app(self):
         gpx_path = self.io.get_gpx()
@@ -18,6 +21,10 @@ class Controller:
         dist_coords = self.gpx_handler.add_distances(coords)
         stripped = self.gpx_handler.strip_list(dist_coords, pace)
 
+    def api_caller(self, coords_list, start_time):
+        precipation = []
+        for lat, lon in coords_list:
+            
     
 class InputOutput:
     
@@ -107,13 +114,46 @@ class GPXHandling:
                 count -= pace
         return stripped
     
+class WeatherAPI:
+    def __init__(self):
+        self.client = openmeteo_requests.Client()
+    
+    
+    def get_precipation(self, lat, lon):
+        url = "https://api.open-meteo.com/v1/forecast"
+        params = {
+        	"latitude": lat,
+        	"longitude": lon,
+        	"minutely_15": ["precipitation"],
+            "timezone": "Europe/Berlin",
+        }
+        responses = self.client.weather_api(url, params=params)
+        response = responses[0]
 
-        
+        minutely_15 = response.Minutely15()
+        minutely_15_precipitation = minutely_15.Variables(0).ValuesAsNumpy()
+
+        minutely_15_data = {
+        	"date": pd.date_range(
+        		start = pd.to_datetime(minutely_15.Time(), unit = "s", utc = True),
+        		end =  pd.to_datetime(minutely_15.TimeEnd(), unit = "s", utc = True),
+        		freq = pd.Timedelta(seconds = minutely_15.Interval()),
+        		inclusive = "left"
+        	)
+        }
+
+        minutely_15_data["precipitation"] = minutely_15_precipitation
+
+        return minutely_15_data
+    
+    def match_time(self):
+        pass
     
 def main():
    io = InputOutput()
    gpx_handler = GPXHandling()
-   con = Controller(io, gpx_handler)
+   weather_api = WeatherAPI()
+   con = Controller(io, gpx_handler, weather_api)
    con.app()
     
 if __name__ == "__main__":
