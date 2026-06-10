@@ -2,6 +2,7 @@
 import gpxpy
 import re
 from math import radians, cos, sin, asin, sqrt
+import datetime
 
 class Controller:
     
@@ -39,6 +40,24 @@ class InputOutput:
              if pace.isdigit():
                  return int(pace)
              print('Please enter a valid integer')
+             
+    def get_start_time(self):
+        while True:
+            day = input('Will you leave today (0), tomorrow (1) or the day after tomorrow (2)? ')
+            if day.isdigit() and day < 3:
+                break
+            print('Please enter a valid number')
+        while True:
+            hour = input("At what hour will you leave? ")
+            if hour.isdigit() and hour < 25:
+                break
+            print('Please enter a valid hour')
+        while True:
+            minutes = input('At what minute of the given hour will you leave? ')
+            if minutes.isdigit() and minutes < 60:
+                break
+            print('Please enter a valid number of minutes')
+        return day, hour, minutes
              
             
 class GPXHandling:
@@ -87,6 +106,9 @@ class GPXHandling:
                 stripped.append((lat, lon))
                 count -= pace
         return stripped
+    
+
+        
     
 def main():
    io = InputOutput()
