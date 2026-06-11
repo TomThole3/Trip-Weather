@@ -21,6 +21,8 @@ class Controller:
         coords = self.gpx_handler.extract_coords(gpx)
         dist_coords = self.gpx_handler.add_distances(coords)
         stripped = self.gpx_handler.strip_list(dist_coords, pace)
+        data = self.api_caller(stripped, start_time)
+        print(data)
         
     def transform_time(self, start_time):
         day, hour, minute = start_time
@@ -169,8 +171,8 @@ class WeatherAPI:
 
         return transformed
     
-    def match_time(self, data, time): # met de hele lijst een specifieke eruit vissen
-        pass
+    def match_time(self, data, time): 
+        return data[time]
     
 def main():
    io = InputOutput()
