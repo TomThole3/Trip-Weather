@@ -16,10 +16,17 @@ class Controller:
     def app(self):
         gpx_path = self.io.get_gpx()
         pace = self.io.get_pace()/4 # 15 minute interval for km/h
+        start_time = self.transform_time(self.io.get_start_time())
         gpx = self.gpx_handler.parse_gpx(gpx_path)
         coords = self.gpx_handler.extract_coords(gpx)
         dist_coords = self.gpx_handler.add_distances(coords)
         stripped = self.gpx_handler.strip_list(dist_coords, pace)
+        
+    def transform_time(self, start_time):
+        day, hour, minute = start_time
+        day = datetime.date.day + day
+        minute = round(minute/15)*15
+        return (day, hour, minute)
 
     def api_caller(self, coords_list, start_time):
         precipation = []
