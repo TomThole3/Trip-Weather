@@ -24,7 +24,11 @@ class Controller:
     def api_caller(self, coords_list, start_time):
         precipation = []
         for lat, lon in coords_list:
-            
+            full = self.weather_api.get_precipation(lat, lon)
+            specific_time = self.weather_api.match_time(full, start_time)
+            precipation.append((specific_time, start_time))
+            #start time + 15
+    
     
 class InputOutput:
     
@@ -143,10 +147,12 @@ class WeatherAPI:
         }
 
         minutely_15_data["precipitation"] = minutely_15_precipitation
+        data = list(zip(minutely_15_precipitation, minutely_15_data['date']))
+        transformed = dict([((stamp.day, stamp.hour, stamp.minute), float(precipitation)) for (precipitation, stamp) in data])
 
-        return minutely_15_data
+        return transformed
     
-    def match_time(self):
+    def match_time(self, data, time): # met de hele lijst een specifieke eruit vissen
         pass
     
 def main():
