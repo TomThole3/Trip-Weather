@@ -2,7 +2,7 @@
 import gpxpy
 import re
 from math import radians, cos, sin, asin, sqrt
-import datetime
+from datetime import date, timedelta
 import openmeteo_requests
 import pandas as pd
 
@@ -26,17 +26,18 @@ class Controller:
         
     def transform_time(self, start_time):
         day, hour, minute = start_time
-        day = datetime.date.day + day
-        minute = round(minute/15)*15
-        return (day, hour, minute)
+        actual_date = (date.today() + timedelta(days=day)).day
+        minute = (round(minute/15)*15) % 60
+        return (actual_date, hour, minute)
 
     def api_caller(self, coords_list, start_time):
-        precipation = []
+        precipitation = []
         for lat, lon in coords_list:
             full = self.weather_api.get_precipation(lat, lon)
             specific_time = self.weather_api.match_time(full, start_time)
-            precipation.append((specific_time, start_time))
+            precipitation.append((specific_time, start_time))
             start_time = self.add_15_minutes(start_time)
+        return precipitation
     
     def add_15_minutes(self, time):
         day, hour, minute = time
@@ -48,6 +49,7 @@ class Controller:
             day += 1
             hour = 0
         return (day, hour, minute)
+    
     
 class InputOutput:
     
@@ -74,20 +76,20 @@ class InputOutput:
     def get_start_time(self):
         while True:
             day = input('Will you leave today (0), tomorrow (1) or the day after tomorrow (2)? ')
-            if day.isdigit() and day < 3:
+            if day.isdigit() and int(day) < 3:
                 break
             print('Please enter a valid number')
         while True:
             hour = input("At what hour will you leave? ")
-            if hour.isdigit() and hour < 25:
+            if hour.isdigit() and int(hour) < 25:
                 break
             print('Please enter a valid hour')
         while True:
             minutes = input('At what minute of the given hour will you leave? ')
-            if minutes.isdigit() and minutes < 60:
+            if minutes.isdigit() and int(minutes) < 60:
                 break
             print('Please enter a valid number of minutes')
-        return day, hour, minutes
+        return int(day), int(hour), int(minutes)
              
             
 class GPXHandling:
