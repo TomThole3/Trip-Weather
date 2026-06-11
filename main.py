@@ -27,8 +27,18 @@ class Controller:
             full = self.weather_api.get_precipation(lat, lon)
             specific_time = self.weather_api.match_time(full, start_time)
             precipation.append((specific_time, start_time))
-            #start time + 15
+            start_time = self.add_15_minutes(start_time)
     
+    def add_15_minutes(self, time):
+        day, hour, minute = time
+        minute += 15
+        if minute == 60:
+            hour += 1
+            minute = 0
+        if hour == 24:
+            day += 1
+            hour = 0
+        return (day, hour, minute)
     
 class InputOutput:
     
