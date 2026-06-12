@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
-import re
-import openmeteo_requests
-import pandas as pd
-import matplotlib.pyplot as plt
+from InputOutput import InputOutput
+from GPXHandling import GPXHandling
+from WeatherAPI import WeatherAPI
+from App import Controller
     
 def main():
-    """
-    Main method that starts the application
+   """
+   Main method that starts the application
     
-    Returns
-    -------
-    None.
+   Returns
+   -------
+   None.
     
-    """
+   """
    io = InputOutput()
    gpx_handler = GPXHandling()
    weather_api = WeatherAPI()
