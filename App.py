@@ -84,6 +84,8 @@ class Controller:
         for lat, lon in coords_list:
             full = self.weather_api.get_precipation(lat, lon)
             specific_time = self.weather_api.match_time(full, start_time)
+            if specific_time == -1:
+                break
             precipitation.append((specific_time, start_time))
             start_time = self.add_15_minutes(start_time)
         return precipitation
