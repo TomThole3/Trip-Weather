@@ -5,6 +5,7 @@ from math import radians, cos, sin, asin, sqrt
 from datetime import date, timedelta
 import openmeteo_requests
 import pandas as pd
+import matplotlib.pyplot as plt
 
 class Controller:
     
@@ -22,7 +23,8 @@ class Controller:
         dist_coords = self.gpx_handler.add_distances(coords)
         stripped = self.gpx_handler.strip_list(dist_coords, pace)
         data = self.api_caller(stripped, start_time)
-        print(data)
+        times, precipitation = self.split_data(data)
+        self.io.table(precipitation, times)
         
     def transform_time(self, start_time):
         day, hour, minute = start_time
@@ -50,6 +52,12 @@ class Controller:
             hour = 0
         return (day, hour, minute)
     
+    def split_data(self, data):
+        precipitation = [row[0] for row in data]
+        times = [f'{timepoint[1]}:{timepoint[2]}' for _, timepoint in data]
+        times = [time.replace(':0', ':00') for time in times]
+        return times, precipitation
+        
     
 class InputOutput:
     
@@ -90,6 +98,10 @@ class InputOutput:
                 break
             print('Please enter a valid number of minutes')
         return int(day), int(hour), int(minutes)
+    
+    def table(self, precipitation, times):
+        plt.bar(times, precipitation)
+        plt.show()
              
             
 class GPXHandling:
