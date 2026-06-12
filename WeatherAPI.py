@@ -72,6 +72,7 @@ class WeatherAPI:
         try:
             return data[time]
         except: 
-            self.io.time_not_found(time)
+            timestring = f'{time[1]}:00' if time[2] == 0 else f'{time[1]}:{time[2]}'
+            self.io.time_not_found(timestring)
             return -1
 
