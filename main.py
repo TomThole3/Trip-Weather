@@ -101,6 +101,14 @@ class InputOutput:
     
     def table(self, precipitation, times):
         plt.bar(times, precipitation)
+        plt.title("Precipitation during your trip ")
+        plt.xlabel("Time")
+        plt.ylabel("Precipitation")
+        
+        ax = plt.gca()
+        ax.set_xticks(range(0, len(times), 4))
+        ax.set_xticklabels(times[::4])
+        
         plt.show()
              
             
