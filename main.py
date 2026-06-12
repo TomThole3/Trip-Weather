@@ -15,7 +15,7 @@ def main():
    """
    io = InputOutput()
    gpx_handler = GPXHandling()
-   weather_api = WeatherAPI()
+   weather_api = WeatherAPI(io)
    con = Controller(io, gpx_handler, weather_api)
    con.app()
     
