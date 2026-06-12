@@ -94,4 +94,19 @@ class InputOutput:
         ax.set_xticklabels(times[::4])
         
         plt.show()
+        
+    def time_not_found(self, time):
+        """
+        Error message when queried time is not provided by the openmeteo api
+
+        Parameters
+        ----------
+        time : First unavailable time
+
+        Returns
+        -------
+        None.
+
+        """
+        print(f'No weather is available after {time}, and values will be unavailable')
 
