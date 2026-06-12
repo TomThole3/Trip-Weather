@@ -7,8 +7,9 @@ class WeatherAPI:
     Class concerned with the interaction with the openmeteo API and subsequent data
     """
     
-    def __init__(self):
+    def __init__(self, io):
         self.client = openmeteo_requests.Client()
+        self.io = io
     
     
     def get_precipation(self, lat, lon):
@@ -55,7 +56,8 @@ class WeatherAPI:
     
     def match_time(self, data, time):
         """
-        Indexes dictionary
+        Indexes dictionary. If the key doesn't exist,
+        the weather at the given timestamp and beyond is not available
 
         Parameters
         ----------
@@ -67,5 +69,9 @@ class WeatherAPI:
         Precipitation at given timestamp
 
         """
-        return data[time]
+        try:
+            return data[time]
+        except: 
+            self.io.time_not_found(time)
+            return -1
 
