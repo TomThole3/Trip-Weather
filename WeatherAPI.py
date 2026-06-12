@@ -3,11 +3,28 @@ import openmeteo_requests
 import pandas as pd
 
 class WeatherAPI:
+    """
+    Class concerned with the interaction with the openmeteo API and subsequent data
+    """
+    
     def __init__(self):
         self.client = openmeteo_requests.Client()
     
     
     def get_precipation(self, lat, lon):
+        """
+        Executes the api call. Code is a slightly adjusted version of the openmeteo's documentation
+
+        Parameters
+        ----------
+        lat : latitude of the queried point
+        lon : longitude of the queried point
+
+        Returns
+        -------
+        transformed : dictionary containing timestamps (key) and precipitation at given timestamp (value)
+
+        """
         url = "https://api.open-meteo.com/v1/forecast"
         params = {
         	"latitude": lat,
@@ -36,6 +53,19 @@ class WeatherAPI:
 
         return transformed
     
-    def match_time(self, data, time): 
+    def match_time(self, data, time):
+        """
+        Indexes dictionary
+
+        Parameters
+        ----------
+        data : dictionary containing timestamps (key) and precipitation (value)
+        time : timestamp (key)
+
+        Returns
+        -------
+        Precipitation at given timestamp
+
+        """
         return data[time]
 
