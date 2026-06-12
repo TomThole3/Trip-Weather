@@ -4,11 +4,11 @@ When cycling long distances, I always thought it was annoy having to look up the
 This project is a python application that turns a .gpx file into a weather forecast. Given the indicated route and a user-defined departure time, it generates a table showing the precipation through the entire trip. This is adjusted for traveling speed, showing the precipation exactly for the locations where the user will be after leaving at the intended starting time. To achieve this, the user's .gpx file is parsed and subsequently the Openmeteo API is called for every location at a 15 minute interval on the route.
 
 ## Requirements:
-Python 3.10+
-gpxpy==1.6.2
-matplotlib==3.11.0
-openmeteo_requests==1.7.5
-pandas==3.0.3
+ - Python 3.10+
+ - gpxpy==1.6.2
+ - matplotlib==3.11.0
+ - openmeteo_requests==1.7.5
+ - pandas==3.0.3
 
  ## Running the script
  ### GPX file
